@@ -1,0 +1,128 @@
+
+// Observer Interface
+interface IVoterObserver {
+    void update(String message);
+}
+
+// Concrete Observer
+class Voter implements IVoterObserver {
+    private String name;
+
+    public Voter(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println("Notification for " + name + ": " + message);
+    }
+}
+
+// Subject Interface
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+interface IPollObservable {
+    void registerObserver(IVoterObserver observer);
+    void removeObserver(IVoterObserver observer);
+    void notifyObservers(String message);
+    void notifyIndividualObservers(Map<IVoterObserver, String> personalizedMessages);
+}
+
+// Concrete Subject
+class NotificationService implements IPollObservable {
+    private List<IVoterObserver> observers = new ArrayList<>();
+
+    @Override
+    public void registerObserver(IVoterObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(IVoterObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(String message) {
+        for (IVoterObserver observer : observers) {
+            observer.update(message);
+        }
+    }
+
+    @Override
+    public void notifyIndividualObservers(Map<IVoterObserver, String> personalizedMessages) {
+        for (Map.Entry<IVoterObserver, String> entry : personalizedMessages.entrySet()) {
+            entry.getKey().update(entry.getValue());
+        }
+    }
+}
+
+// Admin Class
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+class Admin {
+    private NotificationService notificationService;
+
+    public Admin(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
+
+    // Approve a voter and notify them
+    public void approveVoter(Voter voter) {
+        notificationService.registerObserver(voter);
+        notificationService.notifyObservers("Dear " + voter.getName() + ", your registration has been approved!");
+    }
+
+    // Generate random results for voters
+    private String generateRandomResult() {
+        Random random = new Random();
+        int percentage = random.nextInt(101); // Generates a number between 0 and 100
+        return percentage + "%";
+    }
+
+    // Publish results for individual voters
+    public void publishResults(List<Voter> voters) {
+        Map<IVoterObserver, String> personalizedMessages = new HashMap<>();
+        for (Voter voter : voters) {
+            String result = generateRandomResult();
+            personalizedMessages.put(voter, "Your quiz result: " + result);
+        }
+        notificationService.notifyIndividualObservers(personalizedMessages);
+    }
+}
+
+// Main Class
+import java.util.List;
+
+public class OnlineVotingSystem {
+    public static void main(String[] args) {
+        // Create the NotificationService (Subject)
+        NotificationService notificationService = new NotificationService();
+
+        // Create Voters (Observers)
+        Voter voter1 = new Voter("Alice");
+        Voter voter2 = new Voter("Bob");
+        Voter voter3 = new Voter("Charlie");
+
+        // Create Admin
+        Admin admin = new Admin(notificationService);
+
+        // Approve voters and notify them
+        admin.approveVoter(voter1);  // Notification sent to Alice
+        admin.approveVoter(voter2);  // Notification sent to Bob
+        admin.approveVoter(voter3);  // Notification sent to Charlie
+
+        // Publish individual results
+        List<Voter> voters = List.of(voter1, voter2, voter3);
+        admin.publishResults(voters); // Personalized notifications sent with random results
+    }
+}
