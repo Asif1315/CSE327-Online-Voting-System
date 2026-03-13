@@ -1,25 +1,22 @@
 package org.example.onlinevotingsystem.controllers;
 
+import org.example.onlinevotingsystem.models.*;
+import org.example.onlinevotingsystem.repositories.UserRepository;
+import org.example.onlinevotingsystem.services.CategoryService;
+import org.example.onlinevotingsystem.services.NotificationService;
+import org.example.onlinevotingsystem.services.PollService;
+import org.example.onlinevotingsystem.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import org.example.onlinevotingsystem.models.Constants;
-import org.example.onlinevotingsystem.models.Role;
-import org.example.onlinevotingsystem.models.User;
-import org.example.onlinevotingsystem.repositories.UserRepository;
-import org.example.onlinevotingsystem.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AdminController {
