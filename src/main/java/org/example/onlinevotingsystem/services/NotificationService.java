@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.example.onlinevotingsystem.models.Notification;
-import org.example.onlinevotingsystem.models.Poll;
 import org.example.onlinevotingsystem.models.Role;
 import org.example.onlinevotingsystem.models.User;
 import org.example.onlinevotingsystem.repositories.NotificationRepository;
